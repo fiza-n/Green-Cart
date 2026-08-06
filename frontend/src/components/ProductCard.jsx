@@ -2,15 +2,21 @@ import React from 'react'
 import { useAppContext } from '../context/AppContext'
 
 const ProductCard = () => {
-    const { products, addToCart, removeFromCart, cartItems } = useAppContext()
-
+    const { products, addToCart, removeFromCart, cartItems, navigate } = useAppContext()
     const availableProducts = products.filter((item) => item.inStock).slice(0, 5)
 
     return (
         <section className="bg-white px-4 py-6">
-            <div className="flex items-stretch gap-3  ">
+            <div className="flex items-stretch gap-3">
                 {availableProducts.map((item, index) => (
-                    <div key={index} className="relative min-w-[210px] max-w-[210px] flex-shrink-0 border border-zinc-200 rounded-3xl p-3 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+                    <div
+                        key={item._id ?? index}
+                        onClick={() => {
+                            navigate(`/all-products/${item.category.toLowerCase()}/${item._id ?? item.id}`)
+                            scrollTo(0, 0)
+                        }}
+                        className="relative min-w-52.5 max-w-52.5 shrink-0 border border-zinc-200 rounded-3xl p-3 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg cursor-pointer"
+                    >
                         <div className="flex items-center justify-between mb-3">
                             <span className="bg-lime-100 text-lime-700 text-[10px] font-semibold px-2 py-1 rounded-full">{Math.round(((item.price - item.offerPrice) / item.price) * 100)}% off</span>
                             <button className="rounded-full border border-zinc-300 p-1 text-zinc-600 hover:bg-zinc-100 transition text-[10px]">
@@ -27,7 +33,7 @@ const ProductCard = () => {
                             <span className="text-xs text-zinc-400 line-through">${item.price}</span>
                         </div>
                         <button
-                            onClick={() => addToCart(item._id)}
+                            onClick={() => addToCart(item._id ?? item.id)}
                             className="absolute right-3 bottom-3 rounded-full bg-primary px-3 py-2 text-[11px] font-semibold text-white shadow-lg transition hover:bg-primary-dull"
                         >
                             Add to cart

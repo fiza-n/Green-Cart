@@ -1,17 +1,23 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {NavLink} from "react-router-dom"
 import { assets } from "../../public/assets"
 import { useAppContext } from '../context/AppContext'
 
 const Navbar = () => {
     const [open, setOpen] = React.useState(false)
-    const {user, setUser, showUserSignin, setShowUserSignin, navigate} = useAppContext()
+    const {user, setUser, showUserSignin, setShowUserSignin, navigate, setSearchQuery, searchQuery} = useAppContext()
 
     const signout = async() => {
         setUser(null)
         navigate("/")
     }
+
+    useEffect(()=>{
+        if(searchQuery.length > 0){
+            navigate("/all-products")
+        }
+    }, [searchQuery])
+  
   return (
         <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
 
@@ -27,7 +33,7 @@ const Navbar = () => {
                <NavLink to={"/contact"}>Contact</NavLink>
 
                 <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
-                    <input className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search products" />
+                    <input onChange={(e)=> setSearchQuery(e.target.value)} className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search products" />
                     <img src={assets.search_icon} alt="search"  className='w-6 opacity-80'/>
                 </div>
 
@@ -66,7 +72,7 @@ const Navbar = () => {
                <NavLink to={"/my-orders"} onClick={()=> setOpen(false)}>My orders</NavLink>
                 }
                {!user ? (
-                 <button onClick={() => {setOpen(false);  showUserSignin(true);}} className="cursor-pointer px-6 py-2 mt-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-sm">
+                 <button onClick={() => {setOpen(false);  setShowUserSignin(true);}} className="cursor-pointer px-6 py-2 mt-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-sm">
                    Signin
                 </button>
                ) : (
