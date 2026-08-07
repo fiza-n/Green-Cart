@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext'
-import { assets, dummyAddress } from '../../public/assets'
+import { assets } from '../../public/assets'
 
 const Cart = () => {
   const [showAddress, setShowAddress] = useState(false)
-  const [address, setAddress] = useState(dummyAddress)
-  const [selectedAddress, setSelectedAddress] = useState(dummyAddress[0])
   const [ paymentOption, setPaymentOption] = useState("COD")
   const [cartArray, setCartArray] = useState([])
-  const {cartItems, removeFromCart, getCartCount, getCartAmount, updateCartItem, navigate, products} = useAppContext()
+  const {cartItems, removeFromCart, getCartCount, getCartAmount, updateCartItem, navigate, products, addresses, selectedAddress, setSelectedAddress} = useAppContext()
 
 const getCart = () => {
     let tempArray = []
@@ -86,15 +84,15 @@ useEffect(() => {
                 <div className="mb-6">
                     <p className="text-sm font-medium uppercase">Delivery Address</p>
                     <div className="relative flex justify-between items-start mt-2">
-                        <p className="text-gray-500">{selectedAddress ? `${selectedAddress.street}, ${selectedAddress.city},${selectedAddress.country}, ${selectedAddress.state}` : "No address found"}</p>
+                        <p className="text-gray-500">{selectedAddress ? `${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country}` : "No address found"}</p>
                         <button onClick={() => setShowAddress(!showAddress)} className="text-primary hover:underline cursor-pointer">
                             Change
                         </button>
                         {showAddress && (
                             <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
-                               {address.map((add, index)=>(
-                                <p key={index} onClick={() => {setSelectedAddress(add); setShowAddress(false)}} className="text-gray-500 p-2 hover:bg-gray-100">
-                                   {add.street}, {add.city},{add.country}, {add.state}
+                               {addresses.map((add, index)=>(
+                                <p key={add._id || index} onClick={() => {setSelectedAddress(add); setShowAddress(false)}} className="text-gray-500 p-2 hover:bg-gray-100">
+                                   {add.street}, {add.city}, {add.state},{add.country}
                                 </p>)) }
                                 <p onClick={() => navigate("/add-address")} className="text-primary text-center cursor-pointer p-2 hover:bg-primary-dull">
                                     Add address
