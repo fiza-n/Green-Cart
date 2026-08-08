@@ -14,12 +14,18 @@ import ProductCategory from './pages/ProductCategory'
 import ProductDetails from './pages/ProductDetails'
 import Cart from './pages/Cart'
 import AddAddress from './pages/AddAddress'
+import MyOrders from './pages/MyOrders'
+import SellerSignin from './components/seller/SellerSignin'
+import SellerLayout from './pages/seller/SellerLayout'
+import AddProduct from './pages/seller/AddProduct'
+import ProductList from './pages/seller/ProductList'
+import Orders from './pages/seller/Orders'
 
 
 function App() {
   const [count, setCount] = useState(0)
   const isSellerPath = useLocation().pathname.includes("seller")
-  const {showUserSignin} = useAppContext()
+  const {showUserSignin, isSeller} = useAppContext()
 
   return (
     <>
@@ -34,6 +40,13 @@ function App() {
     <Route path='/all-products/:category/:id' element={<ProductDetails/>} />
      <Route path='/cart' element={<Cart/>} />
      <Route path='/add-address' element={<AddAddress/>} />
+     <Route path='/my-orders' element={<MyOrders/>} />
+     <Route path='/seller' element={isSeller ? <SellerLayout />  : <SellerSignin /> }>
+     <Route index element={isSeller? <AddProduct />: null} />
+      <Route path='product-list' element={isSeller? <ProductList />: null} />
+      <Route path='orders' element={isSeller? <Orders />: null} />
+     </Route>
+    
    </Routes>
  </div>
   {isSellerPath ? null : <Footer />}
