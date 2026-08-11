@@ -26,15 +26,22 @@ async function handleUserSignup(req, res) {
       });
 
     const hashedPassword = await hashPassword(password);
-    await User.create({
+   const user =  await User.create({
       fullname,
       email,
       password: hashedPassword,
     });
+     const token = createTokenForUser(user);
+    res.cookie("token", token, {
+      httpOnly: true, //preventing js to access cookie
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none": "strict"//CSRF protection
+      
+    });
 
-    return res.redirect("/");
+    return res.status(201).json({success: "true", message: "User created successfully"})
   } catch (error) {
-    return res.json({ success: "Error", message: error });
+    return res.status(500).json({ success: "Error", message: error });
   }
 }
 
@@ -44,13 +51,13 @@ async function handleUserSignin(req, res) {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.redirect("/signup");
+      return res.json({success: false, message: "User not found"});
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(401).render("signin", {
+      return res.status(401).json({
         error: "Incorrect email or password",
       });
     }
@@ -62,17 +69,22 @@ async function handleUserSignin(req, res) {
       sameSite: process.env.NODE_ENV === "production" ? "none": "strict"//CSRF protection
       
     });
-    return res.redirect("/")
+    return res.json({success: true, email: user.email, name: user.fullname })
   } catch (error) {
     console.log(error);
-    return res.status(500).render("signin", {
+    return res.status(500).json({
       error: "Incorrect email or password",
     });
   }
 }
 
 async function handleUserSignout(req, res) {
-  return res.clearCookie("token").redirect("/");
-}
-
+   res.clearCookie("token", {
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none": "strict"
+      
+    });
+    return res.json({success: true, message: "User signed out successfully!"})
+  }
 export { handleUserSignup, handleUserSignin, handleUserSignout };

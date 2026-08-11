@@ -1,15 +1,20 @@
-import { verifyToken } from "../services/auth";
+import { verifyToken } from "../services/auth.js";
 
 
 async function checkForAuthentication(req, res, next){
     const tokenCookie = req.cookies?.token
     req.user = null
 
-    if(!tokenCookie)
+    if(typeof tokenCookie !== "string" || !tokenCookie.trim())
         return next()
 
     try {
         req.user = verifyToken(tokenCookie)
+        if(req.user?._id){
+            req.userId = req.user._id
+        } else {
+            return res.status(401).json({success: false, message: "Not Authorized"})
+        }
     } catch (err) {
         console.log("Invalid token:", err.message)
         req.user = null
