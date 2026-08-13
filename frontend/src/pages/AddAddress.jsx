@@ -11,7 +11,7 @@ const initialForm = {
   city: '',
   state: '',
   pincode: '',
-  country: 'India',
+  country: 'Pakistan',
   label: 'Home',
   instructions: '',
 }
