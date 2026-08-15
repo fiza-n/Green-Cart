@@ -7,10 +7,26 @@ const AddProduct = () => {
     const [price, setPrice] = useState("")
     const [offerPrice, setOfferPrice] = useState("")
     const [name, setName] = useState("")
-    const[files, setFiles] = useState([])
+    const[images, setImages] = useState([])
 
     const onSubmit = async(e)=>{
-        e.preventDefault()
+        try {
+            e.preventDefault()
+
+            const productData = {
+                name,
+              description:  description.split("\n"),
+              images,
+              price,
+              offerPrice,
+              category
+            }
+
+            const formData = new FormData
+            formData.append("productData", JSON.stringify(productData))
+        } catch (error) {
+            
+        }
     }
   return (
         <div className="no-scrollbar flex-1 h-[95vh] overflow-y-scroll flex flex-col justify-between">
@@ -22,13 +38,13 @@ const AddProduct = () => {
                             <label key={index} htmlFor={`image${index}`}>
                                 <input
                                 onChange={(e)=> {
-                                    const updatedFiles = {...files};
-                                    updatedFiles[index] = e.target.files[0];
-                                    setFiles(updatedFiles)
+                                    const updatedFiles = {...images};
+                                    updatedFiles[index] = e.target.images[0];
+                                    setImages(updatedFiles)
 
                                 }}
                                  accept="image/*" type="file" id={`image${index}`} hidden />
-                                <img className="max-w-24 cursor-pointer" src={files[index] ? URL.createObjectURL(files[index]): assets.upload_area} alt="uploadArea" width={100} height={100} />
+                                <img className="max-w-24 cursor-pointer" src={images[index] ? URL.createObjectURL(images[index]): assets.upload_area} alt="uploadArea" width={100} height={100} />
                             </label>
                         ))}
                     </div>

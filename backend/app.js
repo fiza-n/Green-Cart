@@ -32,8 +32,8 @@ app.use(express.urlencoded({extended: false}))
 app.use(cors({origin: allowedOrigins, credentials: true}))
 
 // authentication middlewares run after CORS so cookies and CORS headers are available
-// app.use(checkForAuthentication)
-// app.use(checkForAuthenticationSeller)
+app.use(checkForAuthentication)
+app.use(checkForAuthenticationSeller)
 
 //routes
 app.use("/api/user" ,userRouter)

@@ -27,6 +27,7 @@ async function handleUserSignup(req, res) {
 
     const hashedPassword = await hashPassword(password);
    const user =  await User.create({
+
       fullname,
       email,
       password: hashedPassword,
