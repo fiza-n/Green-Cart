@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { assets, categories } from '../../../public/assets'
+import { useAppContext} from "../../context/AppContext"
+import toast from 'react-hot-toast'
 
 const AddProduct = () => {
     const [category, setCategory] = useState("")
@@ -8,6 +10,8 @@ const AddProduct = () => {
     const [offerPrice, setOfferPrice] = useState("")
     const [name, setName] = useState("")
     const[images, setImages] = useState([])
+
+    const {axios} = useAppContext()
 
     const onSubmit = async(e)=>{
         try {
@@ -24,8 +28,25 @@ const AddProduct = () => {
 
             const formData = new FormData
             formData.append("productData", JSON.stringify(productData))
+            for(let i =0; i<=images.length ; i++){
+                formData.append('images',images[i])
+            }
+
+            const {data} = await axios.post("/api/product/add-product", {formData})
+            if(data.success){
+                toast.success(data.message)
+                setName('')
+                setCategory('')
+                setDescription('')
+                setOfferPrice('')
+                setPrice('')
+                setImages([])
+            }
+            else{
+                toast.error("Product not added")
+            }
         } catch (error) {
-            
+              toast.error(error.message)
         }
     }
   return (
