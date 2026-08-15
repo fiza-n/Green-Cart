@@ -1,7 +1,7 @@
 import Product from "../models/product.js"
 import { v2 as cloudinary } from "cloudinary"
 
-export const addProduct = (req, res) => {
+export const addProduct = async (req, res) => {
     try {
         let productData = req.body.productData
         const images = req.files
@@ -22,7 +22,7 @@ export const addProduct = (req, res) => {
     }
 }
 
-export const productList = (req, res) => {
+export const productList =async (req, res) => {
     try {
         const products = await Product.find({})
         res.json({ status: true, products })
@@ -33,7 +33,7 @@ export const productList = (req, res) => {
     }
 }
 
-export const productById = (req, res) => {
+export const productById = async(req, res) => {
     try {
         const { id } = req.body
         const productById = await Product.findById(id)
@@ -44,7 +44,7 @@ export const productById = (req, res) => {
     }
 }
 
-export const changeStock = (req, res) => {
+export const changeStock = async (req, res) => {
     try {
           const { id, inStock } = req.body
           await Product.findByIdAndUpdate(id, {inStock})

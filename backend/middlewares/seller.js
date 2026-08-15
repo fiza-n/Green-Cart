@@ -8,9 +8,12 @@ const checkForAuthenticationSeller = async (req, res, next)=>{
         return next()
 
     try {
-        token = verifyToken(tokenCookie)
-        if(token.email === process.env.SELLER_EMAIL){
-           next()
+        // quick token summary for debugging
+        const tokenSummary = { type: typeof tokenCookie, length: tokenCookie?.length, hasBearer: typeof tokenCookie === 'string' && tokenCookie.toLowerCase().startsWith('bearer ') };
+        // console.debug('Seller token summary:', tokenSummary)
+        const token = await verifyToken(tokenCookie)
+        if(token?.email === process.env.SELLER_EMAIL){
+           return next()
         } else {
             return res.status(401).json({success: false, message: "Not Authorized"})
         }

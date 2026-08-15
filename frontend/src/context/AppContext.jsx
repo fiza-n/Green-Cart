@@ -2,6 +2,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { dummyProducts, dummyAddress } from "../../public/assets";
 import { toast } from "react-hot-toast";
+import axios from "axios"
+
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
+axios.defaults.withCredentials = true
 
 export const AppContext = createContext();
 
@@ -141,6 +145,7 @@ export const AppContextProvider = ({ children }) => {
     setSelectedAddress,
     cartItems,
     showUserSignin,
+    axios
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

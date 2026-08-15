@@ -11,7 +11,7 @@ import cloudinaryConnect from "./configs/cloudinary.js"
 import productRouter from "./routes/product.js"
 import cartRouter from "./routes/cart.js"
 import addressRouter from "./routes/address.js"
-
+import orderRouter from "./routes/order.js"
 const app = express()
 const PORT = process.env.PORT  || 8000
 
@@ -27,9 +27,13 @@ const allowedOrigins = ["http://localhost:5173"]
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
-app.use(checkForAuthentication)
-app.use(checkForAuthenticationSeller)
+// app.use(checkForAuthentication)
+// app.use(checkForAuthenticationSeller)
 app.use(cors({origin: allowedOrigins, credentials: true}))
+
+// authentication middlewares run after CORS so cookies and CORS headers are available
+// app.use(checkForAuthentication)
+// app.use(checkForAuthenticationSeller)
 
 //routes
 app.use("/api/user" ,userRouter)
@@ -37,5 +41,6 @@ app.use("/api/seller", sellerRouter)
 app.use("/api/product", productRouter)
 app.use("/api/cart", cartRouter)
 app.use("/api/address", addressRouter)
+app.use("/api/order", orderRouter)
 
 app.listen(PORT, ()=> console.log("Server is running on port", PORT))

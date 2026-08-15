@@ -11,7 +11,7 @@ async function hashPassword(password) {
 
 async function handleUserSignup(req, res) {
   try {
-    const { fullname, email, password, cartItems } = req.body;
+    const { fullname, email, password} = req.body;
     if (!fullname || !email || !password) {
       return res.json({
         success: "Error",
@@ -31,7 +31,7 @@ async function handleUserSignup(req, res) {
       email,
       password: hashedPassword,
     });
-     const token = createTokenForUser(user);
+    const token = await createTokenForUser(user);
     res.cookie("token", token, {
       httpOnly: true, //preventing js to access cookie
       secure: process.env.NODE_ENV === "production",
@@ -41,7 +41,8 @@ async function handleUserSignup(req, res) {
 
     return res.status(201).json({success: "true", message: "User created successfully"})
   } catch (error) {
-    return res.status(500).json({ success: "Error", message: error });
+    console.error(error);
+    return res.status(500).json({ success: false, message: error?.message || String(error) });
   }
 }
 
@@ -62,7 +63,7 @@ async function handleUserSignin(req, res) {
       });
     }
 
-    const token = createTokenForUser(user);
+    const token = await createTokenForUser(user);
     res.cookie("token", token, {
       httpOnly: true, //preventing js to access cookie
       secure: process.env.NODE_ENV === "production",
@@ -71,10 +72,8 @@ async function handleUserSignin(req, res) {
     });
     return res.json({success: true, email: user.email, name: user.fullname })
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      error: "Incorrect email or password",
-    });
+    console.error(error);
+    return res.status(500).json({ success: false, message: error?.message || "Incorrect email or password" });
   }
 }
 

@@ -5,7 +5,7 @@ import { checkForAuthenticationSeller } from "../middlewares/seller.js"
 
 const router = express.Router()
 
-router.post("/add-product",upload.array([files]), checkForAuthenticationSeller ,addProduct)
+router.post("/add-product", upload.array('images'), checkForAuthenticationSeller, addProduct)
 router.get("/product-list", productList)
 router.get("/:id", productById)
 router.post("/stock", checkForAuthenticationSeller,changeStock)

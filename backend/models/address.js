@@ -1,4 +1,4 @@
-import { mongoose, model } from "mongoose";
+import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema(
   {
@@ -45,10 +45,9 @@ const addressSchema = new mongoose.Schema(
     
     }
   },
-  { timestamps: true },
-  { minimize: false },
+  { timestamps: true, minimize: false },
 );
 
-const Address = mongoose.model("product", addressSchema);
+const Address = mongoose.model("address", addressSchema);
 
 export default Address;

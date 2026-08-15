@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { assets } from '../../public/assets'
 import { useAppContext } from '../context/AppContext'
+import { useEffect } from 'react'
 
 const initialForm = {
   fullName: '',
@@ -17,8 +18,8 @@ const initialForm = {
 }
 
 const AddAddress = () => {
-  const navigate = useNavigate()
-  const { addAddress } = useAppContext()
+ 
+  const { addAddress , axios, navigate, user} = useAppContext()
   const [formData, setFormData] = useState(initialForm)
 
   const handleChange = (e) => {
@@ -26,19 +27,26 @@ const AddAddress = () => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    const savedAddress = addAddress({
-      ...formData,
-      street: formData.street,
-      city: formData.city,
-      state: formData.state,
-      country: formData.country,
-    })
-    toast.success('Address saved successfully')
-    navigate('/cart')
-    console.log('Saved address:', savedAddress)
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault()
+      const { data } = await axios.post("/api/address/add-address", formData)
+      if (data?.success) {
+        toast.success(data.message)
+        navigate("/cart")
+      } else {
+        toast.error(data?.message || "Error saving address")
+      }
+    } catch (error) {
+       toast.error(error?.message || "An error occurred")
+    }
   }
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/cart")
+    }
+  }, [])
 
   return (
     <div className="min-h-[75vh] py-8 md:py-12">

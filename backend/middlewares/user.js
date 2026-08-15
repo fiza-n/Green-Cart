@@ -9,7 +9,10 @@ async function checkForAuthentication(req, res, next){
         return next()
 
     try {
-        req.user = verifyToken(tokenCookie)
+        // quick token summary for debugging (don't log full token)
+        const tokenSummary = { type: typeof tokenCookie, length: tokenCookie?.length, hasBearer: typeof tokenCookie === 'string' && tokenCookie.toLowerCase().startsWith('bearer ') };
+        // console.debug('Token summary:', tokenSummary)
+        req.user = await verifyToken(tokenCookie)
         if(req.user?._id){
             req.userId = req.user._id
         } else {

@@ -1,19 +1,34 @@
 import React from 'react'
 import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
 const Signin = () => {
  const [state, setState] = React.useState("Signin");
     const [name, setName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const{setShowUserSignin, setUser} = useAppContext()
+    const{setShowUserSignin, setUser, axios} = useAppContext()
+
+
 
     const handleSubmit = async (e) =>{
-        e.preventDefault()
-        setUser({
-            email:"fiza@gmail.com",
-            name:"Fiza"
-        })
+        try {
+            e.preventDefault()
+            if(state === "Signin"){
+
+                const { data } = await axios.post("/api/user/signin", {email, password})
+                setUser(true)
+                toast.success(data.message)
+            }
+            else{
+                const { data } = await axios.post("/api/user/signup", { fullname: name, email, password })
+                setUser(true)
+                toast.success(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+      
         setShowUserSignin(false)
     }
 
