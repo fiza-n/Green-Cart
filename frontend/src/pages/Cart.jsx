@@ -7,7 +7,7 @@ const Cart = () => {
   const [showAddress, setShowAddress] = useState(false)
   const [ paymentOption, setPaymentOption] = useState("COD")
   const [cartArray, setCartArray] = useState([])
-  const {cartItems,axios, removeFromCart, getCartCount, getCartAmount,setAddresses, updateCartItem, navigate, products, addresses, selectedAddress, setSelectedAddress, user} = useAppContext()
+  const {cartItems,axios, removeFromCart, getCartCount, setCartItems,getCartAmount,setAddresses, updateCartItem, navigate, products, addresses, selectedAddress, setSelectedAddress, user} = useAppContext()
 
 const getCart = () => {
     let tempArray = []
@@ -39,8 +39,51 @@ const getUserAddress = async ()=>{
 }
 
 const placeOrder = async() => {
+    try {
+        
+        if(!selectedAddress){
+            return toast.error("please select an address")
+        }
+       if(paymentOption === 'COD'){
+         const {data} = await axios.post("/api/order/cod", {
+            userId: user._id,
+            items: cartArray.map(item=> ({product: item._id, quantity: item.quantity})),
+            address: selectedAddress._id,
 
+         })
+         if(data.success){
+            toast.success(data.message)
+            setCartItems({})
+            navigate("/my-orders")
+         }
+         else{
+            toast.error(data.message)
+         }
+       }
+       else if(paymentOption === "Online"){
+          const {data} = await axios.post("/api/order/online", {
+            userId: user._id,
+            items: cartArray.map(item=> ({product: item._id, quantity: item.quantity})),
+            address: selectedAddress._id,
+
+         })
+         if(data.success){
+            window.location.replace(data.url)
+         }
+         else{
+            toast.error(data.message)
+         }
+       }
+       else{
+        toast.error("Choose valid payment method")
+       }
+
+    } catch (error) {
+        toast.error(error.message)
+    }
 }
+
+
 useEffect(() => {
     if(products.length  > 0 && cartItems){
         getCart()

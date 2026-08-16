@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { assets, dummyOrders } from '../../../public/assets'
+import { useAppContext } from '../../context/AppContext'
 
 const Orders = () => {
  const [orders, setOrder] = useState([])
+ const {axios, isSeller} = useAppContext()
 
  const fetchOrders = async()=>{
-    setOrder(dummyOrders)
+       try {
+      const {data} = await axios.get("/api/orders/seller")
+      if(data.success){
+        toast(data.message)
+        setOrder(data.orders)
+      }
+      else{
+        toast.error(data.message)
+      }
+    } catch (error) {
+       toast.error(error.message)
+    }
  }
 useEffect(()=>{
     fetchOrders()

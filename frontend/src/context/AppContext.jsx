@@ -191,7 +191,8 @@ try {
     setSelectedAddress,
     cartItems,
     showUserSignin,
-    axios
+    axios,
+    setCartItems
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
