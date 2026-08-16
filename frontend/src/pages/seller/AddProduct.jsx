@@ -28,11 +28,11 @@ const AddProduct = () => {
 
             const formData = new FormData
             formData.append("productData", JSON.stringify(productData))
-            for(let i =0; i<=images.length ; i++){
+            for(let i =0; i< images.length ; i++){
                 formData.append('images',images[i])
             }
 
-            const {data} = await axios.post("/api/product/add-product", {formData})
+            const {data} = await axios.post("/api/product/add-product", formData)
             if(data.success){
                 toast.success(data.message)
                 setName('')
@@ -58,11 +58,10 @@ const AddProduct = () => {
                         {Array(4).fill('').map((_, index) => (
                             <label key={index} htmlFor={`image${index}`}>
                                 <input
-                                onChange={(e)=> {
-                                    const updatedFiles = {...images};
-                                    updatedFiles[index] = e.target.images[0];
+                               onChange={(e)=> {
+                                    const updatedFiles = [...images];
+                                    updatedFiles[index] = e.target.files[0];
                                     setImages(updatedFiles)
-
                                 }}
                                  accept="image/*" type="file" id={`image${index}`} hidden />
                                 <img className="max-w-24 cursor-pointer" src={images[index] ? URL.createObjectURL(images[index]): assets.upload_area} alt="uploadArea" width={100} height={100} />

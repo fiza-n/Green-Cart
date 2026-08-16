@@ -71,7 +71,7 @@ async function handleUserSignin(req, res) {
       sameSite: process.env.NODE_ENV === "production" ? "none": "strict"//CSRF protection
       
     });
-    return res.json({success: true, email: user.email, name: user.fullname })
+    return res.json({success: true, email: user.email, name: user.fullname , message: "User Signin successfully"})
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: error?.message || "Incorrect email or password" });
@@ -79,7 +79,8 @@ async function handleUserSignin(req, res) {
 }
 
 async function handleUserSignout(req, res) {
-   res.clearCookie("token", {
+   try {
+    res.clearCookie("token", {
       httpOnly: true, 
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none": "strict"
@@ -87,4 +88,9 @@ async function handleUserSignout(req, res) {
     });
     return res.json({success: true, message: "User signed out successfully!"})
   }
+    catch (error) {
+     return res.json({success: false, message: "Error signing out!"})
+   }
+  }
+  
 export { handleUserSignup, handleUserSignin, handleUserSignout };

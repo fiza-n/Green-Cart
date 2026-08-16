@@ -2,12 +2,17 @@ import { mongoose, model } from "mongoose";
 
 const productSchema = new mongoose.Schema(
   {
+    userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+    required: true
+},
     name: {
       type: String,
       required: true,
     },
     description: {
-      type: String,
+      type: Array,
       required: true,
     },
     price: {
@@ -18,10 +23,6 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    inStock: {
-      type: Boolean,
-      required: true,
-    },
     category: {
       type: String,
       required: true,
@@ -29,7 +30,7 @@ const productSchema = new mongoose.Schema(
 
     images: {
       type: Array,
-      default: true,
+      default: [],
     },
   },
   { timestamps: true },

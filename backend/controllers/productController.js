@@ -3,22 +3,30 @@ import { v2 as cloudinary } from "cloudinary"
 
 export const addProduct = async (req, res) => {
     try {
-        let productData = req.body.productData
-        const images = req.files
+        const images = req.files || []
+
+        if (!images.length) {
+            return res.status(400).json({ success: false, message: "Please upload at least one image" })
+        }
+
+        const productData = JSON.parse(req.body.productData || "{}")
 
         const imagesUrl = await Promise.all(
             images.map(async (img) => {
-                let result = await cloudinary.uploader.upload(img.path, { resource_type: 'image' });
+               let result = await cloudinary.uploader.upload(img.path, { resource_type: 'image', folder: 'greencart' });
                 return result.secure_url
             })
         )
+
         await Product.create({
-            ...productData, image: imagesUrl
+            ...productData,
+            images: imagesUrl,
         })
+
         return res.status(201).json({ success: true, message: "Product Added" })
     } catch (error) {
         console.log(error)
-        return res.json({ success: "Error", message: "Product not Added" });
+        return res.status(500).json({ success: false, message: "Product not Added" });
     }
 }
 

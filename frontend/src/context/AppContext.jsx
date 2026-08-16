@@ -29,12 +29,25 @@ export const AppContextProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState(() => getStoredValue("green-cart-cart", {}));
   const [searchQuery, setSearchQuery] = useState("");
-  const [addresses, setAddresses] = useState(() => getStoredValue("green-cart-addresses", dummyAddress));
+  const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(() => getStoredValue("green-cart-selected-address", dummyAddress[0]));
 
-  const fetchProducts = () => {
-    setProducts(dummyProducts);
-  };
+//  const fetchProducts = async () => {
+//   try {
+//     const { data } = await axios.get("/api/product/product-list");
+//     if (data.status) {
+//       setProducts(data.products);
+//     } else {
+//       toast.error("Failed to load products");
+//     }
+//   } catch (error) {
+//     toast.error(error.response?.data?.message || error.message);
+//   }
+// };
+
+const fetchProducts = async () =>{
+  setProducts(dummyProducts)
+}
 
   function addToCart(ItemId) {
     const id = ItemId?._id ?? ItemId?.id ?? ItemId;

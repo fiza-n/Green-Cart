@@ -21,7 +21,8 @@ export const addAddress = async (req, res) => {
 
 export const getAddress = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId = req.userId;
+    if (!userId) return res.status(401).json({ success: false, message: "Not authorized" });
     const foundAddress = await Address.find({ userId });
     return res.json({ success: true, foundAddress });
   } catch (error) {

@@ -8,6 +8,7 @@ async function cloudinaryConnect() {
        api_secret: process.env.API_SECRET
 
     })
+    console.log("Cloudinary config now:", cloudinary.config())
     
     console.log("Connected to Cloudinary")
     return true
