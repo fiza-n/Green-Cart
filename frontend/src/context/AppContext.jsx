@@ -23,8 +23,8 @@ const getStoredValue = (key, fallback) => {
 
 export const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(false);
-  const [isSeller, setIsSeller] = useState(false);
+  const [user, setUser] = useState(undefined);
+  const [isSeller, setIsSeller] = useState(undefined);
   const [showUserSignin, setShowUserSignin] = useState(false);
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState(() => getStoredValue("green-cart-cart", {}));
@@ -47,6 +47,37 @@ export const AppContextProvider = ({ children }) => {
 
 const fetchProducts = async () =>{
   setProducts(dummyProducts)
+}
+const fetchSeller = async() =>
+{
+try {
+    const {data} = await axios.get("/api/seller/is-auth")
+  if(data.success){
+    setIsSeller(true)
+    toast.success(data.message)
+  }
+  else{
+    toast.error(data.message)
+  }
+} catch (error) {
+  toast.error(error.message)
+}
+}
+
+const fetchUser = async() =>
+{
+try {
+    const {data} = await axios.get("/api/user/is-auth")
+  if(data.success){
+    setUser(true)
+    toast.success(data.message)
+  }
+  else{
+    toast.error(data.message)
+  }
+} catch (error) {
+  toast.error(error.message)
+}
 }
 
   function addToCart(ItemId) {
@@ -121,6 +152,8 @@ const fetchProducts = async () =>{
 
   useEffect(() => {
     fetchProducts();
+    fetchSeller()
+    fetchUser()
   }, []);
 
   useEffect(() => {

@@ -77,6 +77,23 @@ async function handleUserSignin(req, res) {
     return res.status(500).json({ success: false, message: error?.message || "Incorrect email or password" });
   }
 }
+async function handleUserIsAuth(req, res) {
+  try {
+    if (!req.user?._id) {
+      return res.status(401).json({ success: false, message: "Not authorized" });
+    }
+    const user = await User.findById(req.user._id).select("-password");
+    if (!user) {
+      return res.status(401).json({ success: false, message: "Not authorized" });
+    }
+    return res.json({ success: true, user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Not authorized" });
+  }
+}
+
+
 
 async function handleUserSignout(req, res) {
    try {
@@ -93,4 +110,4 @@ async function handleUserSignout(req, res) {
    }
   }
   
-export { handleUserSignup, handleUserSignin, handleUserSignout };
+export { handleUserSignup, handleUserSignin, handleUserSignout, handleUserIsAuth };

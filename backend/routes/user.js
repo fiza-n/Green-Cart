@@ -1,5 +1,5 @@
 import express from "express"
-import {handleUserSignin, handleUserSignout, handleUserSignup} from "../controllers/userController.js"
+import {handleUserSignin, handleUserSignout, handleUserSignup,handleUserIsAuth} from "../controllers/userController.js"
 import { checkForAuthentication } from "../middlewares/user.js"
 
 const router = express.Router()
@@ -7,6 +7,6 @@ const router = express.Router()
 router.post("/signup", handleUserSignup )
 router.post("/signin", handleUserSignin )
 router.get("/signout", handleUserSignout)
-
+router.get("/is-auth", handleUserIsAuth)
 
 export default router

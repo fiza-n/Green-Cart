@@ -13,8 +13,9 @@ const checkForAuthenticationSeller = async (req, res, next)=>{
         // console.debug('Seller token summary:', tokenSummary)
         const token = await verifyToken(tokenCookie)
         if(token?.email === process.env.SELLER_EMAIL){
-           return next()
-        } else {
+        req.userId = token._id || token.id
+        return next()
+        }else {
             return res.status(401).json({success: false, message: "Not Authorized"})
         }
     } catch (err) {
