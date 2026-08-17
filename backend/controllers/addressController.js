@@ -23,8 +23,8 @@ export const getAddress = async (req, res) => {
   try {
     const userId = req.userId;
     if (!userId) return res.status(401).json({ success: false, message: "Not authorized" });
-    const foundAddress = await Address.find({ userId });
-    return res.json({ success: true, foundAddress });
+    const addresses = await Address.find({ userId });
+    return res.json({ success: true, addresses });
   } catch (error) {
     console.log(error);
     return res.json({ success: "Error", message: "Issue found" });
