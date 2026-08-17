@@ -37,6 +37,9 @@ app.use(cors({origin: allowedOrigins, credentials: true}))
 // authentication middlewares run after CORS so cookies and CORS headers are available
 app.use(checkForAuthentication)
 app.use(checkForAuthenticationSeller)
+app.get("/", (req, res)=>{
+    console.log("Api is working")
+})
 
 //routes
 app.use("/api/user" ,userRouter)
