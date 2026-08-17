@@ -29,7 +29,7 @@ const SellerSignin = () => {
          toast.error(error?.message || "An error occurred")
       }
      }
-  return !isSeller && (
+  return isSeller == false && (
     <form onSubmit={handleSubmit} className='min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10 text-sm text-gray-800' action="">
         <div className=' max-w-md rounded-3xl border border-gray-200 bg-white p-8 shadow-neutral-600 shadow-lg'>
             <p className='mb-6 text-center text-2xl font-semibold'>

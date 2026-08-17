@@ -4,6 +4,7 @@ import { checkForAuthentication } from "../middlewares/user.js"
 import { checkForAuthenticationSeller } from "../middlewares/seller.js"
 
 
+
 const router = express.Router()
 
 router.post("/cod", checkForAuthentication,placeOrderCOD)

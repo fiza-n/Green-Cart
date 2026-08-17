@@ -43,7 +43,7 @@ function App() {
      <Route path='/add-address' element={<AddAddress/>} />
      <Route path='/my-orders' element={<MyOrders/>} />
      <Route path='/payment' element={<Payment />} />
-     <Route path='/seller' element={isSeller ? <SellerLayout />  : <SellerSignin /> }>
+    <Route path='/seller' element={isSeller === undefined ? null : (isSeller ? <SellerLayout /> : <SellerSignin />) }>
      <Route index element={isSeller? <AddProduct />: null} />
       <Route path='product-list' element={isSeller? <ProductList />: null} />
       <Route path='orders' element={isSeller? <Orders />: null} />

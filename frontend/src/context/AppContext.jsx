@@ -48,36 +48,24 @@ export const AppContextProvider = ({ children }) => {
 const fetchProducts = async () =>{
   setProducts(dummyProducts)
 }
-const fetchSeller = async() =>
-{
-try {
+const fetchSeller = async() => {
+  try {
     const {data} = await axios.get("/api/seller/is-auth")
-  if(data.success){
-    setIsSeller(true)
-    toast.success(data.message)
+    if(data.success){ setIsSeller(true) }
+    else{ setIsSeller(false) }
+  } catch (error) {
+    setIsSeller(false)
   }
-  else{
-    toast.error(data.message)
-  }
-} catch (error) {
-  toast.error(error.message)
-}
 }
 
-const fetchUser = async() =>
-{
-try {
+const fetchUser = async() => {
+  try {
     const {data} = await axios.get("/api/user/is-auth")
-  if(data.success){
-    setUser(true)
-    toast.success(data.message)
+    if(data.success){ setUser(data.user) }
+    else{ setUser(null) }
+  } catch (error) {
+    setUser(null)
   }
-  else{
-    toast.error(data.message)
-  }
-} catch (error) {
-  toast.error(error.message)
-}
 }
 
   function addToCart(ItemId) {
