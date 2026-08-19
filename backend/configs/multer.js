@@ -1,13 +1,8 @@
 import multer from "multer";
-import path from "path";
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.resolve("./public/uploads"));
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    },
-});
-
+ 
+// We no longer write to local disk (Vercel's filesystem is read-only/ephemeral
+// in serverless functions). Files are kept in memory as a Buffer, then
+// productController.js uploads that buffer straight to Vercel Blob storage.
+const storage = multer.memoryStorage();
+ 
 export const upload = multer({ storage });

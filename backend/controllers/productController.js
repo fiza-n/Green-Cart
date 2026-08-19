@@ -1,4 +1,5 @@
 import Product from "../models/product.js"
+import { put } from "@vercel/blob"
 
 export const addProduct = async (req, res) => {
     try {
@@ -9,9 +10,21 @@ export const addProduct = async (req, res) => {
         }
 
         const productData = JSON.parse(req.body.productData || "{}")
-        
-        const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get("host")}`
-        const imagesUrl = images.map((img) => `${baseUrl}/uploads/${img.filename}`)
+
+        // multer keeps the uploaded file in memory (see configs/multer.js) since
+        // Vercel's serverless filesystem can't be written to persistently.
+        // Each file's buffer is uploaded straight to Vercel Blob storage, which
+        // returns a permanent public URL we save on the product.
+        const imagesUrl = await Promise.all(
+            images.map(async (img) => {
+                const blob = await put(
+                    `products/${Date.now()}-${img.originalname}`,
+                    img.buffer,
+                    { access: "public", contentType: img.mimetype }
+                )
+                return blob.url
+            })
+        )
 
         await Product.create({
             ...productData,
