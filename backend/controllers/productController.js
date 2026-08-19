@@ -1,5 +1,4 @@
 import Product from "../models/product.js"
-import { v2 as cloudinary } from "cloudinary"
 
 export const addProduct = async (req, res) => {
     try {
@@ -10,13 +9,9 @@ export const addProduct = async (req, res) => {
         }
 
         const productData = JSON.parse(req.body.productData || "{}")
-
-        const imagesUrl = await Promise.all(
-            images.map(async (img) => {
-               let result = await cloudinary.uploader.upload(img.path, { resource_type: 'image', folder: 'greencart' });
-                return result.secure_url
-            })
-        )
+        
+        const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get("host")}`
+        const imagesUrl = images.map((img) => `${baseUrl}/uploads/${img.filename}`)
 
         await Product.create({
             ...productData,
@@ -62,5 +57,3 @@ export const changeStock = async (req, res) => {
         return res.json({ success: "Error", message: error.message });
     }
 }
-
-
