@@ -40,13 +40,15 @@ const getUserAddress = async ()=>{
 
 const placeOrder = async() => {
     try {
-        
+        if(!user){
+            toast.error("Please sign in to place an order")
+            return
+        }
         if(!selectedAddress){
             return toast.error("please select an address")
         }
        if(paymentOption === 'COD'){
          const {data} = await axios.post("/api/order/cod", {
-            userId: user._id,
             items: cartArray.map(item=> ({product: item._id, quantity: item.quantity})),
             address: selectedAddress._id,
 
@@ -62,7 +64,6 @@ const placeOrder = async() => {
        }
        else if(paymentOption === "Online"){
           const {data} = await axios.post("/api/order/online", {
-            userId: user._id,
             items: cartArray.map(item=> ({product: item._id, quantity: item.quantity})),
             address: selectedAddress._id,
 

@@ -5,7 +5,11 @@ import stripe from "stripe"
 
 export const placeOrderCOD = async (req, res) => {
   try {
-    const { items, address, userId } = req.body;
+    const userId = req.userId;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Not authorized" });
+    }
+    const { items, address } = req.body;
     if (!address || items.length <= 0) {
       return res.json({ success: false, message: "Invalid data" });
     }
@@ -34,7 +38,11 @@ export const placeOrderCOD = async (req, res) => {
 };
 export const placeOrderStripe = async (req, res) => {
   try {
-    const { items, address, userId } = req.body;
+    const userId = req.userId;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Not authorized" });
+    }
+    const { items, address } = req.body;
 
     const { origin } = req.headers;
     if (!address || items.length <= 0) {
