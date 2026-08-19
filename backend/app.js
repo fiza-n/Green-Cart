@@ -27,7 +27,7 @@ await DBConnect(process.env.MONGODB_URI)
 //allow multiple origins: localhost for local dev, plus your deployed frontend URL
 const allowedOrigins = [
     "http://localhost:5173",
-    process.env.FRONTEND_URL,
+    "https://green-cart-black.vercel.app",
 ].filter(Boolean)
 
 app.post("/online", express.raw({type: "json/application"}), stripeWebhooks)
