@@ -4,7 +4,12 @@ import { dummyProducts, dummyAddress } from "../../public/assets";
 import { toast } from "react-hot-toast";
 import axios from "axios"
 
-axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
+// In production, requests go to the frontend's own domain (relative/empty baseURL)
+// so they get proxied to the backend via vercel.json rewrites - this makes the
+// session cookie first-party instead of cross-site, avoiding browser third-party
+// cookie blocking. Locally there's no such proxy, so VITE_BACKEND_URL points
+// straight at your local backend (e.g. http://localhost:8000).
+axios.defaults.baseURL = import.meta.env.PROD ? "" : import.meta.env.VITE_BACKEND_URL
 axios.defaults.withCredentials = true
 
 export const AppContext = createContext();
@@ -32,7 +37,7 @@ export const AppContextProvider = ({ children }) => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(() => getStoredValue("green-cart-selected-address", dummyAddress[0]));
 
- const fetchProducts = async () => {
+const fetchProducts = async () => {
   try {
     const { data } = await axios.get("/api/product/product-list");
     if (data.status) {
@@ -44,10 +49,6 @@ export const AppContextProvider = ({ children }) => {
     toast.error(error.response?.data?.message || error.message);
   }
 };
-
-// const fetchProducts = async () =>{
-//   setProducts(dummyProducts)
-// }
 const fetchSeller = async() => {
   try {
     const {data} = await axios.get("/api/seller/is-auth")
