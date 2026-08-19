@@ -32,22 +32,22 @@ export const AppContextProvider = ({ children }) => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(() => getStoredValue("green-cart-selected-address", dummyAddress[0]));
 
-//  const fetchProducts = async () => {
-//   try {
-//     const { data } = await axios.get("/api/product/product-list");
-//     if (data.status) {
-//       setProducts(data.products);
-//     } else {
-//       toast.error("Failed to load products");
-//     }
-//   } catch (error) {
-//     toast.error(error.response?.data?.message || error.message);
-//   }
-// };
+ const fetchProducts = async () => {
+  try {
+    const { data } = await axios.get("/api/product/product-list");
+    if (data.status) {
+      setProducts(data.products);
+    } else {
+      toast.error("Failed to load products");
+    }
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
+  }
+};
 
-const fetchProducts = async () =>{
-  setProducts(dummyProducts)
-}
+// const fetchProducts = async () =>{
+//   setProducts(dummyProducts)
+// }
 const fetchSeller = async() => {
   try {
     const {data} = await axios.get("/api/seller/is-auth")

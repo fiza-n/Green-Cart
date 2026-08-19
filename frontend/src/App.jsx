@@ -21,6 +21,7 @@ import AddProduct from './pages/seller/AddProduct'
 import ProductList from './pages/seller/ProductList'
 import Orders from './pages/seller/Orders'
 import { Payment } from './pages/Payment'
+import Loading from './components/Loading'
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
      <Route path='/cart' element={<Cart/>} />
      <Route path='/add-address' element={<AddAddress/>} />
      <Route path='/my-orders' element={<MyOrders/>} />
+     <Route path='/loaders' element={<Loading/>} />
      <Route path='/payment' element={<Payment />} />
     <Route path='/seller' element={isSeller === undefined ? null : (isSeller ? <SellerLayout /> : <SellerSignin />) }>
      <Route index element={isSeller? <AddProduct />: null} />

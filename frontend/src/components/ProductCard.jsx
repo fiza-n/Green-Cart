@@ -24,7 +24,7 @@ const ProductCard = () => {
                             </button>
                         </div>
                         <div className="flex items-center justify-center h-28 mb-3">
-                            <img src={item.image[0]} alt={item.name} className="max-h-full object-contain" />
+                            <img src={(item.images ?? item.image)?.[0]} alt={item.name} className="max-h-full object-contain" />
                         </div>
                         <p className="text-[11px] text-zinc-500 mb-1">{item.category}</p>
                         <h2 className="text-sm font-semibold text-zinc-900 mb-2 line-clamp-2">{item.name}</h2>

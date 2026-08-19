@@ -10,8 +10,9 @@ const ProductDetails = () => {
     const product = products.find((item) => item._id === id || item.id === id)
 
     useEffect(() => {
-        if (product?.image?.length > 0) {
-            setThumbnail(product.image[0])
+        const productImages = product?.images ?? product?.image
+        if (productImages?.length > 0) {
+            setThumbnail(productImages[0])
         }
     }, [product])
 
@@ -24,7 +25,7 @@ const ProductDetails = () => {
     }
 
     const rating = product.rating ?? 4
-    const images = product.image ?? []
+    const images = product.images ?? product.image ?? []
 
     return (
         <div className="max-w-6xl w-full px-6 mt-16">

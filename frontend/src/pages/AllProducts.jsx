@@ -42,7 +42,7 @@ const AllProducts = () => {
             </div>
             <div className="flex items-center justify-center h-28 mb-3">
               <img
-                src={item.image[0]}
+                src={(item.images ?? item.image)?.[0]}
                 alt={item.name}
                 className="max-h-full object-contain"
               />

@@ -29,7 +29,7 @@ export const placeOrderCOD = async (req, res) => {
     res.json({ success: true, message: "Order Placed" });
   } catch (error) {
     console.log(error);
-    return res.json({ success: "Error", message: error.message });
+    return res.json({ success: false, message: error.message });
   }
 };
 export const placeOrderStripe = async (req, res) => {
@@ -82,9 +82,9 @@ export const placeOrderStripe = async (req, res) => {
     const session = await stripeInstance.checkout.sessions.create({
       line_items,
       mode: "payment",
-      session_url: `${origin}/loaders?next=my-orders`,
+      success_url: `${origin}/loaders?next=my-orders`,
       cancel_url: `${origin}/cart`,
-      meta_data: {
+      metadata: {
         orderId: order._id.toString(),
         userId,
       },
@@ -92,7 +92,7 @@ export const placeOrderStripe = async (req, res) => {
     res.json({ success: true, url: session.url });
   } catch (error) {
     console.log(error);
-    return res.json({ success: "Error", message: error.message });
+    return res.json({ success: false, message: error.message });
   }
 };
 
@@ -118,7 +118,7 @@ export const stripeWebhooks = async (req, res) => {
       const paymentIntentId = paymentIntent.id;
 
       const session = await stripeInstance.checkout.sessions.list({
-        payment_Intent: paymentIntentId,
+        payment_intent: paymentIntentId,
       });
       const { orderId, userId } = session.data[0].metadata;
       await Order.findByIdAndUpdate(orderId, { isPaid: true });
@@ -130,7 +130,7 @@ export const stripeWebhooks = async (req, res) => {
       const paymentIntentId = paymentIntent.id;
 
       const session = await stripeInstance.checkout.sessions.list({
-        payment_Intent: paymentIntentId,
+        payment_intent: paymentIntentId,
       });
       const { orderId } = session.data[0].metadata;
 
@@ -147,28 +147,31 @@ export const stripeWebhooks = async (req, res) => {
 
 export const getUserOrders = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId = req.userId;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Not authorized" });
+    }
     const orders = await Order.find({
       userId,
-      $or: [{ paymentType: "COD", isPaid: true }],
+      $or: [{ paymentType: "COD" }, { isPaid: true }],
     })
       .populate("items.product address")
       .sort({ createdAt: -1 });
     res.json({ success: true, orders });
   } catch (error) {
     console.log(error);
-    return res.json({ success: "Error", message: error.message });
+    return res.json({ success: false, message: error.message });
   }
 };
 
 export const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find({
-      $or: [{ paymentType: "COD", isPaid: true }],
+      $or: [{ paymentType: "COD" }, { isPaid: true }],
     }).populate("items.product address");
     res.json({ success: true, orders });
   } catch (error) {
     console.log(error);
-    return res.json({ success: "Error", message: error.message });
+    return res.json({ success: false, message: error.message });
   }
 };

@@ -2,11 +2,6 @@ import { mongoose, model } from "mongoose";
 
 const productSchema = new mongoose.Schema(
   {
-    userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
-    required: true
-},
     name: {
       type: String,
       required: true,
@@ -31,6 +26,10 @@ const productSchema = new mongoose.Schema(
     images: {
       type: Array,
       default: [],
+    },
+    inStock: {
+      type: Boolean,
+      default: true,
     },
   },
   { timestamps: true },

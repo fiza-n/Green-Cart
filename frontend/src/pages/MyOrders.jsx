@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { dummyOrders } from "../../public/assets";
 import toast from "react-hot-toast";
+import { useAppContext } from "../context/AppContext";
 
 const MyOrders = () => {
-  const [myOrders, setMyOrders,axios, user] = useState([]);
+  const [myOrders, setMyOrders] = useState([]);
+  const { axios, user } = useAppContext();
 
   const fetchMyOrders = async () => {
     try {
-      const {data} = await axios.get("/api/orders/my-orders")
+      const {data} = await axios.get("/api/order/my-orders")
       if(data.success){
-        toast(data.message)
         setMyOrders(data.orders)
       }
       else{
@@ -55,7 +56,7 @@ const MyOrders = () => {
                   <div key={item._id || itemIndex} className="flex flex-col gap-4 rounded-xl bg-gray-50 p-4 md:flex-row md:items-center md:justify-between">
                     <div className="flex items-center gap-4">
                       <div className="rounded-lg bg-primary/10 p-3">
-                        <img src={item.product.image?.[0]} alt={item.product.name} className="h-16 w-16 object-cover" />
+                        <img src={(item.product.images ?? item.product.image)?.[0]} alt={item.product.name} className="h-16 w-16 object-cover" />
                       </div>
                       <div>
                         <h2 className="text-lg font-medium text-gray-800">{item.product.name}</h2>
