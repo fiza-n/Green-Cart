@@ -45,18 +45,18 @@ export const productList =async (req, res) => {
     }
     catch (error) {
         console.log(error)
-        return res.json({ success: "Error", message: "No Product found" });
+        return res.json({ success: false, message: "No Product found" });
     }
 }
 
 export const productById = async(req, res) => {
     try {
-        const { id } = req.body
+        const { id } = req.params
         const productById = await Product.findById(id)
         res.json({ status: true, productById })
     } catch (error) {
         console.log(error)
-        return res.json({ success: "Error", message: error.message });
+        return res.json({ success: false, message: error.message });
     }
 }
 
@@ -67,6 +67,6 @@ export const changeStock = async (req, res) => {
            res.json({ status: true, message: "Stock Updated" })
     } catch (error) {
         console.log(error)
-        return res.json({ success: "Error", message: error.message });
+        return res.json({ success: false, message: error.message });
     }
 }
