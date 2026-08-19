@@ -34,7 +34,7 @@ export const addProduct = async (req, res) => {
         return res.status(201).json({ success: true, message: "Product Added" })
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ success: false, message: "Product not Added" });
+        return res.status(500).json({ success: false, message: error.message || "Product not Added" });
     }
 }
 
