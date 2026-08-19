@@ -21,7 +21,7 @@ app.set("trust proxy", 1)
 await DBConnect(process.env.MONGODB_URI)
 
 //allow multiple origins
-const allowedOrigins = ["http://localhost:5173"]
+const allowedOrigins = ["http://localhost:5173", "https://green-cart-black.vercel.app"]
 
 app.post("/online", express.raw({type: "json/application"}), stripeWebhooks)
 
